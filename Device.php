@@ -35,26 +35,6 @@ class Device extends Module
     }
 
     /**
-     * Module info
-     * @return array
-     */
-    public function info()
-    {
-        return array(
-            'name' => 'Device detector',
-            'version' => '1.0.0-dev',
-            'description' => 'Allows to detect user\'s device type (mobile, tablet) and switch to the corresponding theme',
-            'author' => 'Iurii Makukh ',
-            'core' => '1.x',
-            'license' => 'GPL-3.0+',
-            'configure' => 'admin/module/settings/device',
-            'settings' => array(
-                'theme' => array()
-            )
-        );
-    }
-
-    /**
      * Implements hook "route.list"
      * @param mixed $routes
      */
