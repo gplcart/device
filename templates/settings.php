@@ -20,9 +20,9 @@
                 <th><?php echo $this->text('Tablet theme'); ?></th>
               </tr>
             </thead>
-            <?php foreach ($stores as $store_id => $store_name) { ?>
+            <?php foreach ($stores as $store_id => $store) { ?>
             <tr>
-              <td class="middle"><?php echo $this->escape($store_name); ?></td>
+              <td class="middle"><?php echo $this->escape($store['name']); ?></td>
               <td>
                 <select class="form-control" name="settings[theme][<?php echo $this->escape($store_id); ?>][mobile]">
                   <option value=""><?php echo $this->text('- do not switch automatically -'); ?></option>
