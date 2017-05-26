@@ -22,23 +22,23 @@
             </thead>
             <?php foreach ($stores as $store_id => $store) { ?>
             <tr>
-              <td class="middle"><?php echo $this->escape($store['name']); ?></td>
+              <td class="middle"><?php echo $this->e($store['name']); ?></td>
               <td>
-                <select class="form-control" name="settings[theme][<?php echo $this->escape($store_id); ?>][mobile]">
+                <select class="form-control" name="settings[theme][<?php echo $this->e($store_id); ?>][mobile]">
                   <option value=""><?php echo $this->text('- do not switch automatically -'); ?></option>
                   <?php foreach ($themes as $theme_id => $theme) { ?>
-                  <option value="<?php echo $this->escape($theme_id); ?>"<?php echo isset($settings['theme'][$store_id]['mobile']) && $settings['theme'][$store_id]['mobile'] == $theme_id ? ' selected' : ''; ?>>
-                    <?php echo $this->escape($theme['name']); ?>
+                  <option value="<?php echo $this->e($theme_id); ?>"<?php echo isset($settings['theme'][$store_id]['mobile']) && $settings['theme'][$store_id]['mobile'] == $theme_id ? ' selected' : ''; ?>>
+                    <?php echo $this->e($theme['name']); ?>
                   </option>
                   <?php } ?>
                 </select>
               </td>
               <td>
-                <select class="form-control" name="settings[theme][<?php echo $this->escape($store_id); ?>][tablet]">
+                <select class="form-control" name="settings[theme][<?php echo $this->e($store_id); ?>][tablet]">
                   <option value=""><?php echo $this->text('- do not switch automatically -'); ?></option>
                   <?php foreach ($themes as $theme_id => $theme) { ?>
-                  <option value="<?php echo $this->escape($theme_id); ?>"<?php echo isset($settings['theme'][$store_id]['tablet']) && $settings['theme'][$store_id]['tablet'] == $theme_id ? ' selected' : ''; ?>>
-                    <?php echo $this->escape($theme['name']); ?>
+                  <option value="<?php echo $this->e($theme_id); ?>"<?php echo isset($settings['theme'][$store_id]['tablet']) && $settings['theme'][$store_id]['tablet'] == $theme_id ? ' selected' : ''; ?>>
+                    <?php echo $this->e($theme['name']); ?>
                   </option>
                   <?php } ?>
                 </select>
