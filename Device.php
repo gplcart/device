@@ -56,7 +56,7 @@ class Device extends Module
     public function hookTheme(\gplcart\core\Controller $controller)
     {
         $device = $this->getDevice($controller);
-        $store_id = $controller->store('store_id');
+        $store_id = $controller->getStore('store_id');
         $settings = $this->config->module('device');
 
         if ($controller->isBackend()//
