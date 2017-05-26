@@ -80,7 +80,7 @@ class Device extends Module
     protected function getDevice(\gplcart\core\Controller $controller)
     {
         /* @var $session \gplcart\core\helpers\Session */
-        $session = $controller->prop('session');
+        $session = $controller->getProperty('session');
 
         $device = $session->get('device');
 
