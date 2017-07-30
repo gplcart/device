@@ -9,8 +9,7 @@
 
 namespace gplcart\modules\device;
 
-use gplcart\core\Module,
-    gplcart\core\Library;
+use gplcart\core\Module;
 
 /**
  * Main class for Device detector module
@@ -19,19 +18,11 @@ class Device extends Module
 {
 
     /**
-     * Library class instance
-     * @var \gplcart\core\Library
+     * Constructor
      */
-    protected $library;
-
-    /**
-     * @param Library $library
-     */
-    public function __construct(Library $library)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->library = $library;
     }
 
     /**
@@ -40,7 +31,6 @@ class Device extends Module
      */
     public function hookRouteList(&$routes)
     {
-        // Module settings page
         $routes['admin/module/settings/device'] = array(
             'access' => 'module_edit',
             'handlers' => array(
@@ -55,7 +45,7 @@ class Device extends Module
      */
     public function hookTheme(\gplcart\core\Controller $controller)
     {
-        $device = $this->getDevice($controller);
+        $device = $this->getDevice();
         $store_id = $controller->getStore('store_id');
         $settings = $this->config->module('device');
 
@@ -74,20 +64,22 @@ class Device extends Module
 
     /**
      * Returns device type
-     * @param \gplcart\core\Controller $controller
      * @return string
      */
-    protected function getDevice(\gplcart\core\Controller $controller)
+    protected function getDevice()
     {
         /* @var $session \gplcart\core\helpers\Session */
-        $session = $controller->getProperty('session');
+        $session = $this->getHelper('Session');
 
         $device = $session->get('device');
 
         if (empty($device)) {
 
-            /* @var $detector \Mobile_Detect */
-            $detector = $this->getDetectorInstance();
+            try {
+                $detector = $this->getDetectorInstance();
+            } catch (\Exception $ex) {
+                return 'desktop';
+            }
 
             if ($detector->isMobile()) {
                 $device = 'mobile';
@@ -110,7 +102,7 @@ class Device extends Module
      */
     protected function getDetectorInstance()
     {
-        $this->library->load('mobile_detect');
+        $this->getLibrary()->load('mobile_detect');
 
         if (!class_exists('Mobile_Detect')) {
             throw new \InvalidArgumentException('Class Mobile_Detect not forund');
@@ -148,7 +140,7 @@ class Device extends Module
      */
     public function hookModuleEnableAfter()
     {
-        $this->library->clearCache();
+        $this->getLibrary()->clearCache();
     }
 
     /**
@@ -156,7 +148,7 @@ class Device extends Module
      */
     public function hookModuleDisableAfter()
     {
-        $this->library->clearCache();
+        $this->getLibrary()->clearCache();
     }
 
     /**
@@ -164,7 +156,7 @@ class Device extends Module
      */
     public function hookModuleInstallAfter()
     {
-        $this->library->clearCache();
+        $this->getLibrary()->clearCache();
     }
 
     /**
@@ -172,7 +164,7 @@ class Device extends Module
      */
     public function hookModuleUninstallAfter()
     {
-        $this->library->clearCache();
+        $this->getLibrary()->clearCache();
     }
 
 }
