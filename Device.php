@@ -43,7 +43,7 @@ class Device extends Module
      * Implements hook "theme"
      * @param \gplcart\core\Controller $controller
      */
-    public function hookTheme(\gplcart\core\Controller $controller)
+    public function hookTheme($controller)
     {
         $device = $this->getDevice();
         $store_id = $controller->getStore('store_id');
