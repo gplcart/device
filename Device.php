@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package Device detector
+ * @package Device
  * @author Iurii Makukh
  * @copyright Copyright (c) 2017, Iurii Makukh
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html GPL-3.0+
@@ -12,7 +12,7 @@ namespace gplcart\modules\device;
 use gplcart\core\Module;
 
 /**
- * Main class for Device detector module
+ * Main class for Device module
  */
 class Device extends Module
 {
@@ -27,9 +27,9 @@ class Device extends Module
 
     /**
      * Implements hook "route.list"
-     * @param mixed $routes
+     * @param array $routes
      */
-    public function hookRouteList(&$routes)
+    public function hookRouteList(array &$routes)
     {
         $routes['admin/module/settings/device'] = array(
             'access' => 'module_edit',
@@ -45,7 +45,7 @@ class Device extends Module
      */
     public function hookTheme($controller)
     {
-        $device = $this->getDevice();
+        $device = $this->getDeviceType();
         $store_id = $controller->getStore('store_id');
         $settings = $this->config->module('device');
 
@@ -60,55 +60,6 @@ class Device extends Module
         if ($this->config->isEnabledModule($theme)) {
             $controller->setCurrentTheme($theme);
         }
-    }
-
-    /**
-     * Returns device type
-     * @return string
-     */
-    protected function getDevice()
-    {
-        /* @var $session \gplcart\core\helpers\Session */
-        $session = $this->getHelper('Session');
-
-        $device = $session->get('device');
-
-        if (empty($device)) {
-
-            try {
-                $detector = $this->getDetectorInstance();
-            } catch (\Exception $ex) {
-                return 'desktop';
-            }
-
-            if ($detector->isMobile()) {
-                $device = 'mobile';
-            } else if ($detector->isTablet()) {
-                $device = 'tablet';
-            } else {
-                $device = 'desktop';
-            }
-
-            $session->set('device', $device);
-        }
-
-        return $device;
-    }
-
-    /**
-     * Returns instance on detector class
-     * @return \Mobile_Detect
-     * @throws \InvalidArgumentException
-     */
-    protected function getDetectorInstance()
-    {
-        $this->getLibrary()->load('mobile_detect');
-
-        if (!class_exists('Mobile_Detect')) {
-            throw new \InvalidArgumentException('Class Mobile_Detect not forund');
-        }
-
-        return new \Mobile_Detect;
     }
 
     /**
@@ -165,6 +116,55 @@ class Device extends Module
     public function hookModuleUninstallAfter()
     {
         $this->getLibrary()->clearCache();
+    }
+
+    /**
+     * Returns a device type
+     * @return string
+     */
+    protected function getDeviceType()
+    {
+        /* @var $session \gplcart\core\helpers\Session */
+        $session = $this->getHelper('Session');
+
+        $device = $session->get('device');
+
+        if (empty($device)) {
+
+            try {
+                $detector = $this->getMobileDetectInstance();
+            } catch (\Exception $ex) {
+                return 'desktop';
+            }
+
+            if ($detector->isMobile()) {
+                $device = 'mobile';
+            } else if ($detector->isTablet()) {
+                $device = 'tablet';
+            } else {
+                $device = 'desktop';
+            }
+
+            $session->set('device', $device);
+        }
+
+        return $device;
+    }
+
+    /**
+     * Returns instance on detector class
+     * @return \Mobile_Detect
+     * @throws \InvalidArgumentException
+     */
+    protected function getMobileDetectInstance()
+    {
+        $this->getLibrary()->load('mobile_detect');
+
+        if (!class_exists('Mobile_Detect')) {
+            throw new \InvalidArgumentException('Class Mobile_Detect not forund');
+        }
+
+        return new \Mobile_Detect;
     }
 
 }

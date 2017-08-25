@@ -13,7 +13,7 @@ use gplcart\core\models\Module as ModuleModel;
 use gplcart\core\controllers\backend\Controller as BackendController;
 
 /**
- * Handles incoming requests and outputs data related to Device detector module
+ * Handles incoming requests and outputs data related to Device module
  */
 class Settings extends BackendController
 {
