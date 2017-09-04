@@ -45,21 +45,7 @@ class Device extends Module
      */
     public function hookTheme($controller)
     {
-        $device = $this->getDeviceType();
-        $store_id = $controller->getStore('store_id');
-        $settings = $this->config->module('device');
-
-        if ($controller->isBackend()//
-                || $device === 'desktop'//
-                || empty($settings['theme'][$store_id][$device])) {
-            return null;
-        }
-
-        $theme = $settings['theme'][$store_id][$device];
-
-        if ($this->config->isEnabledModule($theme)) {
-            $controller->setCurrentTheme($theme);
-        }
+        $this->switchTheme($controller);
     }
 
     /**
@@ -116,6 +102,25 @@ class Device extends Module
     public function hookModuleUninstallAfter()
     {
         $this->getLibrary()->clearCache();
+    }
+
+    /**
+     * Switch the current theme
+     * @param \gplcart\core\Controller $controller
+     */
+    protected function switchTheme($controller)
+    {
+        $device = $this->getDeviceType();
+        $store_id = $controller->getStore('store_id');
+        $settings = $this->config->module('device');
+
+        if (!$controller->isBackend() && $device !== 'desktop' && !empty($settings['theme'][$store_id][$device])) {
+
+            $theme = $settings['theme'][$store_id][$device];
+            if ($this->config->isEnabledModule($theme)) {
+                $controller->setCurrentTheme($theme);
+            }
+        }
     }
 
     /**
