@@ -26,6 +26,30 @@ class Device extends Module
     }
 
     /**
+     * Implements hook "library.list"
+     * @param array $libraries
+     */
+    public function hookLibraryList(array &$libraries)
+    {
+        $libraries['mobile_detect'] = array(
+            'name' => /* @text */'Mobile Detect',
+            'description' => /* @text */'A lightweight PHP class for detecting mobile devices',
+            'url' => 'https://github.com/serbanghita/Mobile-Detect',
+            'download' => 'https://github.com/serbanghita/Mobile-Detect/archive/2.8.25.zip',
+            'type' => 'php',
+            'version_source' => array(
+                'file' => 'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php',
+                'pattern' => '/.*VERSION.*(\\d+\\.+\\d+\\.+\\d+)/',
+                'lines' => 100
+            ),
+            'module' => 'device',
+            'files' => array(
+                'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php'
+            )
+        );
+    }
+
+    /**
      * Implements hook "route.list"
      * @param array $routes
      */
@@ -46,30 +70,6 @@ class Device extends Module
     public function hookTheme($controller)
     {
         $this->switchTheme($controller);
-    }
-
-    /**
-     * Implements hook "library.list"
-     * @param array $libraries
-     */
-    public function hookLibraryList(array &$libraries)
-    {
-        $libraries['mobile_detect'] = array(
-            'name' => 'Mobile Detect',
-            'description' => 'A lightweight PHP class for detecting mobile devices',
-            'url' => 'https://github.com/serbanghita/Mobile-Detect',
-            'download' => 'https://github.com/serbanghita/Mobile-Detect/archive/2.8.25.zip',
-            'type' => 'php',
-            'version_source' => array(
-                'file' => 'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php',
-                'pattern' => '/.*VERSION.*(\\d+\\.+\\d+\\.+\\d+)/',
-                'lines' => 100
-            ),
-            'module' => 'device',
-            'files' => array(
-                'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php'
-            )
-        );
     }
 
     /**
