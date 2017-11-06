@@ -43,7 +43,7 @@ class Settings extends BackendController
         $this->setBreadcrumbEditSettings();
 
         $this->setData('stores', $this->store->getList());
-        $this->setData('settings', $this->config->module('device'));
+        $this->setData('settings', $this->config->getFromModule('device'));
         $this->setData('themes', $this->getFrontendThemesSettings());
 
         $this->submitSettings();
