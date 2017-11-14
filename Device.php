@@ -106,29 +106,10 @@ class Device extends Module
     }
 
     /**
-     * Switch the current theme
-     * @param \gplcart\core\Controller $controller
-     */
-    protected function switchTheme($controller)
-    {
-        $device = $this->getDeviceType();
-        $store_id = $controller->getStore('store_id');
-        $settings = $this->config->getFromModule('device');
-
-        if (!$controller->isBackend() && $device !== 'desktop' && !empty($settings['theme'][$store_id][$device])) {
-
-            $theme = $settings['theme'][$store_id][$device];
-            if ($this->config->isEnabledModule($theme)) {
-                $controller->setCurrentTheme($theme);
-            }
-        }
-    }
-
-    /**
      * Returns a device type
      * @return string
      */
-    protected function getDeviceType()
+    public function getDeviceType()
     {
         /* @var $session \gplcart\core\helpers\Session */
         $session = $this->getHelper('Session');
@@ -162,7 +143,7 @@ class Device extends Module
      * @return \Mobile_Detect
      * @throws \InvalidArgumentException
      */
-    protected function getMobileDetectInstance()
+    public function getMobileDetectInstance()
     {
         $this->getLibrary()->load('mobile_detect');
 
@@ -171,6 +152,27 @@ class Device extends Module
         }
 
         return new \Mobile_Detect;
+    }
+
+    /**
+     * Switch the current theme
+     * @param \gplcart\core\Controller $controller
+     */
+    protected function switchTheme($controller)
+    {
+        if (!$controller->isInternalRoute()) {
+
+            $device = $this->getDeviceType();
+            $store_id = $controller->getStore('store_id');
+            $settings = $this->config->getFromModule('device');
+
+            if (!$controller->isBackend() && $device !== 'desktop' && !empty($settings['theme'][$store_id][$device])) {
+                $theme = $settings['theme'][$store_id][$device];
+                if ($this->config->isEnabledModule($theme)) {
+                    $controller->setCurrentTheme($theme);
+                }
+            }
+        }
     }
 
 }
