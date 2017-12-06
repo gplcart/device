@@ -9,21 +9,44 @@
 
 namespace gplcart\modules\device;
 
-use gplcart\core\Module,
-    gplcart\core\Config;
+use gplcart\core\Library,
+    gplcart\core\Module;
+use gplcart\core\helpers\Session as SessionHelper;
 
 /**
  * Main class for Device module
  */
-class Device extends Module
+class Device
 {
 
     /**
-     * @param Config $config
+     * Module class instance
+     * @var \gplcart\core\Module $module
      */
-    public function __construct(Config $config)
+    protected $module;
+
+    /**
+     * Library class instance
+     * @var \gplcart\core\Library $library
+     */
+    protected $library;
+
+    /**
+     * Session helper class instance
+     * @var \gplcart\core\helpers\Session $session
+     */
+    protected $session;
+
+    /**
+     * @param Module $module
+     * @param Library $library
+     * @param SessionHelper $session
+     */
+    public function __construct(Module $module, Library $library, SessionHelper $session)
     {
-        parent::__construct($config);
+        $this->module = $module;
+        $this->library = $library;
+        $this->session = $session;
     }
 
     /**
@@ -78,7 +101,7 @@ class Device extends Module
      */
     public function hookModuleEnableAfter()
     {
-        $this->getLibrary()->clearCache();
+        $this->library->clearCache();
     }
 
     /**
@@ -86,7 +109,7 @@ class Device extends Module
      */
     public function hookModuleDisableAfter()
     {
-        $this->getLibrary()->clearCache();
+        $this->library->clearCache();
     }
 
     /**
@@ -94,7 +117,7 @@ class Device extends Module
      */
     public function hookModuleInstallAfter()
     {
-        $this->getLibrary()->clearCache();
+        $this->library->clearCache();
     }
 
     /**
@@ -102,7 +125,7 @@ class Device extends Module
      */
     public function hookModuleUninstallAfter()
     {
-        $this->getLibrary()->clearCache();
+        $this->library->clearCache();
     }
 
     /**
@@ -111,15 +134,12 @@ class Device extends Module
      */
     public function getDeviceType()
     {
-        /* @var $session \gplcart\core\helpers\Session */
-        $session = $this->getHelper('Session');
-
-        $device = $session->get('device');
+        $device = $this->session->get('device');
 
         if (empty($device)) {
 
             try {
-                $detector = $this->getMobileDetectInstance();
+                $detector = $this->getLibrary();
             } catch (\Exception $ex) {
                 return 'desktop';
             }
@@ -132,7 +152,7 @@ class Device extends Module
                 $device = 'desktop';
             }
 
-            $session->set('device', $device);
+            $this->session->set('device', $device);
         }
 
         return $device;
@@ -143,9 +163,9 @@ class Device extends Module
      * @return \Mobile_Detect
      * @throws \InvalidArgumentException
      */
-    public function getMobileDetectInstance()
+    public function getLibrary()
     {
-        $this->getLibrary()->load('mobile_detect');
+        $this->library->load('mobile_detect');
 
         if (!class_exists('Mobile_Detect')) {
             throw new \InvalidArgumentException('Class Mobile_Detect not forund');
@@ -160,19 +180,25 @@ class Device extends Module
      */
     protected function switchTheme($controller)
     {
-        if (!$controller->isInternalRoute()) {
-
-            $device = $this->getDeviceType();
-            $store_id = $controller->getStore('store_id');
-            $settings = $this->config->getFromModule('device');
-
-            if (!$controller->isBackend() && $device !== 'desktop' && !empty($settings['theme'][$store_id][$device])) {
-                $theme = $settings['theme'][$store_id][$device];
-                if ($this->config->isEnabledModule($theme)) {
-                    $controller->setCurrentTheme($theme);
-                }
-            }
+        if ($controller->isInternalRoute()) {
+            return false;
         }
+
+        $device = $this->getDeviceType();
+        $store_id = $controller->getStoreId();
+        $settings = $this->module->getSettings('device');
+
+        if ($controller->isBackend() || $device === 'desktop' || empty($settings['theme'][$store_id][$device])) {
+            return false;
+        }
+
+        $theme = $settings['theme'][$store_id][$device];
+        if ($this->module->isEnabled($theme)) {
+            $controller->setCurrentTheme($theme);
+            return true;
+        }
+
+        return false;
     }
 
 }
