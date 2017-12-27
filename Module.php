@@ -10,13 +10,13 @@
 namespace gplcart\modules\device;
 
 use gplcart\core\Library,
-    gplcart\core\Module;
+    gplcart\core\Module as CoreModule;
 use gplcart\core\helpers\Session as SessionHelper;
 
 /**
  * Main class for Device module
  */
-class Device
+class Module
 {
 
     /**
@@ -38,11 +38,11 @@ class Device
     protected $session;
 
     /**
-     * @param Module $module
+     * @param CoreModule $module
      * @param Library $library
      * @param SessionHelper $session
      */
-    public function __construct(Module $module, Library $library, SessionHelper $session)
+    public function __construct(CoreModule $module, Library $library, SessionHelper $session)
     {
         $this->module = $module;
         $this->library = $library;
