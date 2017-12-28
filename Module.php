@@ -9,9 +9,11 @@
 
 namespace gplcart\modules\device;
 
+use Exception;
 use gplcart\core\Library,
     gplcart\core\Module as CoreModule;
 use gplcart\core\helpers\Session as SessionHelper;
+use gplcart\core\exceptions\Dependency as DependencyException;
 
 /**
  * Main class for Device module
@@ -140,7 +142,7 @@ class Module
 
             try {
                 $detector = $this->getLibrary();
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 return 'desktop';
             }
 
@@ -161,22 +163,23 @@ class Module
     /**
      * Returns instance on detector class
      * @return \Mobile_Detect
-     * @throws \InvalidArgumentException
+     * @throws DependencyException
      */
     public function getLibrary()
     {
         $this->library->load('mobile_detect');
 
-        if (!class_exists('Mobile_Detect')) {
-            throw new \InvalidArgumentException('Class Mobile_Detect not forund');
+        if (class_exists('Mobile_Detect')) {
+            return new \Mobile_Detect;
         }
 
-        return new \Mobile_Detect;
+        throw new DependencyException('Class Mobile_Detect not forund');
     }
 
     /**
      * Switch the current theme
      * @param \gplcart\core\Controller $controller
+     * @return bool
      */
     protected function switchTheme($controller)
     {
