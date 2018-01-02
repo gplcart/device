@@ -161,7 +161,7 @@ class Module
     }
 
     /**
-     * Returns instance on detector class
+     * Returns the mobile detector instance
      * @return \Mobile_Detect
      * @throws DependencyException
      */
@@ -191,11 +191,13 @@ class Module
         $store_id = $controller->getStoreId();
         $settings = $this->module->getSettings('device');
 
-        if ($controller->isBackend() || $device === 'desktop' || empty($settings['theme'][$store_id][$device])) {
+        if ($controller->isBackend() || $device === 'desktop'//
+                || empty($settings['theme'][$store_id][$device])) {
             return false;
         }
 
         $theme = $settings['theme'][$store_id][$device];
+
         if ($this->module->isEnabled($theme)) {
             $controller->setCurrentTheme($theme);
             return true;
