@@ -10,15 +10,15 @@
 namespace gplcart\modules\device;
 
 use Exception;
-use gplcart\core\Library,
-    gplcart\core\Module as CoreModule;
+use gplcart\core\Module,
+    gplcart\core\Library;
 use gplcart\core\helpers\Session as SessionHelper;
 use gplcart\core\exceptions\Dependency as DependencyException;
 
 /**
  * Main class for Device module
  */
-class Module
+class Main
 {
 
     /**
@@ -40,11 +40,11 @@ class Module
     protected $session;
 
     /**
-     * @param CoreModule $module
+     * @param Module $module
      * @param Library $library
      * @param SessionHelper $session
      */
-    public function __construct(CoreModule $module, Library $library, SessionHelper $session)
+    public function __construct(Module $module, Library $library, SessionHelper $session)
     {
         $this->module = $module;
         $this->library = $library;
@@ -191,8 +191,7 @@ class Module
         $store_id = $controller->getStoreId();
         $settings = $this->module->getSettings('device');
 
-        if ($controller->isBackend() || $device === 'desktop'//
-                || empty($settings['theme'][$store_id][$device])) {
+        if ($controller->isBackend() || $device === 'desktop' || empty($settings['theme'][$store_id][$device])) {
             return false;
         }
 
