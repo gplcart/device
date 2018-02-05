@@ -10,10 +10,10 @@
 namespace gplcart\modules\device;
 
 use Exception;
-use gplcart\core\Module,
-    gplcart\core\Library;
-use gplcart\core\helpers\Session as SessionHelper;
 use gplcart\core\exceptions\Dependency as DependencyException;
+use gplcart\core\helpers\Session as SessionHelper;
+use gplcart\core\Library;
+use gplcart\core\Module;
 
 /**
  * Main class for Device module
@@ -58,8 +58,8 @@ class Main
     public function hookLibraryList(array &$libraries)
     {
         $libraries['mobile_detect'] = array(
-            'name' => /* @text */'Mobile Detect',
-            'description' => /* @text */'A lightweight PHP class for detecting mobile devices',
+            'name' => 'Mobile Detect', // @text
+            'description' => 'A lightweight PHP class for detecting mobile devices', // @text
             'url' => 'https://github.com/serbanghita/Mobile-Detect',
             'download' => 'https://github.com/serbanghita/Mobile-Detect/archive/2.8.25.zip',
             'type' => 'php',
