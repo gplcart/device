@@ -10,10 +10,10 @@
 namespace gplcart\modules\device;
 
 use Exception;
-use LogicException;
 use gplcart\core\helpers\Session as SessionHelper;
 use gplcart\core\Library;
 use gplcart\core\Module;
+use LogicException;
 
 /**
  * Main class for Device module
