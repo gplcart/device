@@ -10,7 +10,7 @@
 namespace gplcart\modules\device;
 
 use Exception;
-use gplcart\core\exceptions\Dependency as DependencyException;
+use LogicException;
 use gplcart\core\helpers\Session as SessionHelper;
 use gplcart\core\Library;
 use gplcart\core\Module;
@@ -163,7 +163,7 @@ class Main
     /**
      * Returns the mobile detector instance
      * @return \Mobile_Detect
-     * @throws DependencyException
+     * @throws LogicException
      */
     public function getLibrary()
     {
@@ -173,7 +173,7 @@ class Main
             return new \Mobile_Detect;
         }
 
-        throw new DependencyException('Class Mobile_Detect not forund');
+        throw new LogicException('Class Mobile_Detect not found');
     }
 
     /**
