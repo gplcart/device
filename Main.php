@@ -10,7 +10,8 @@
 namespace gplcart\modules\device;
 
 use Exception;
-use gplcart\core\helpers\Session as SessionHelper;
+use gplcart\core\Controller;
+use gplcart\core\helpers\Session;
 use gplcart\core\Library;
 use gplcart\core\Module;
 use LogicException;
@@ -42,9 +43,9 @@ class Main
     /**
      * @param Module $module
      * @param Library $library
-     * @param SessionHelper $session
+     * @param Session $session
      */
-    public function __construct(Module $module, Library $library, SessionHelper $session)
+    public function __construct(Module $module, Library $library, Session $session)
     {
         $this->module = $module;
         $this->library = $library;
@@ -91,9 +92,9 @@ class Main
 
     /**
      * Implements hook "theme"
-     * @param \gplcart\core\Controller $controller
+     * @param Controller $controller
      */
-    public function hookTheme($controller)
+    public function hookTheme(Controller $controller)
     {
         $this->switchTheme($controller);
     }
@@ -140,11 +141,7 @@ class Main
 
         if (empty($device)) {
 
-            try {
-                $detector = $this->getLibrary();
-            } catch (Exception $ex) {
-                return 'desktop';
-            }
+            $detector = $this->getLibrary();
 
             if ($detector->isMobile()) {
                 $device = 'mobile';
@@ -178,31 +175,29 @@ class Main
 
     /**
      * Switch the current theme
-     * @param \gplcart\core\Controller $controller
-     * @return bool
+     * @param Controller $controller
      */
-    protected function switchTheme($controller)
+    protected function switchTheme(Controller $controller)
     {
-        if ($controller->isInternalRoute()) {
-            return false;
+        if (!$controller->isInternalRoute()) {
+
+            try {
+
+                $device = $this->getDeviceType();
+                $store_id = $controller->getStoreId();
+                $settings = $this->module->getSettings('device');
+
+                if (!$controller->isBackend() && $device !== 'desktop' && !empty($settings['theme'][$store_id][$device])) {
+                    $theme = $settings['theme'][$store_id][$device];
+                    if ($this->module->isEnabled($theme)) {
+                        $controller->setCurrentTheme($theme);
+                    }
+                }
+
+            } catch (Exception $ex) {
+                trigger_error($ex->getMessage());
+            }
         }
-
-        $device = $this->getDeviceType();
-        $store_id = $controller->getStoreId();
-        $settings = $this->module->getSettings('device');
-
-        if ($controller->isBackend() || $device === 'desktop' || empty($settings['theme'][$store_id][$device])) {
-            return false;
-        }
-
-        $theme = $settings['theme'][$store_id][$device];
-
-        if ($this->module->isEnabled($theme)) {
-            $controller->setCurrentTheme($theme);
-            return true;
-        }
-
-        return false;
     }
 
 }

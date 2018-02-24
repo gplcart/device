@@ -1,12 +1,12 @@
 {
-    "name": "Device detector",
-    "version": "1.0.0-dev",
-    "description": "Allows to detect user's device type (mobile, tablet) and switch to an appropriate theme",
-    "author": "Iurii Makukh ",
-    "core": "1.x",
-    "license": "GPL-3.0+",
-    "configure": "admin/module/settings/device",
-    "settings": {
-        "theme": []
-    }
+  "name": "Device detector",
+  "version": "1.0.0-dev",
+  "description": "Allows to detect user's device type (mobile, tablet) and switch to an appropriate theme",
+  "author": "Iurii Makukh ",
+  "core": "1.x",
+  "license": "GPL-3.0+",
+  "configure": "admin/module/settings/device",
+  "settings": {
+    "theme": []
+  }
 }
