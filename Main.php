@@ -64,15 +64,9 @@ class Main
             'url' => 'https://github.com/serbanghita/Mobile-Detect',
             'download' => 'https://github.com/serbanghita/Mobile-Detect/archive/2.8.25.zip',
             'type' => 'php',
-            'version_source' => array(
-                'file' => 'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php',
-                'pattern' => '/.*VERSION.*(\\d+\\.+\\d+\\.+\\d+)/',
-                'lines' => 100
-            ),
+            'version' => '2.8.25',
             'module' => 'device',
-            'files' => array(
-                'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php'
-            )
+            'vendor' => 'mobiledetect/mobiledetectlib'
         );
     }
 
